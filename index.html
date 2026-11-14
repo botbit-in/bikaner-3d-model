@@ -14,37 +14,35 @@
     }
     #canvas-container { width: 100vw; height: 100vh; position: relative; }
 
-    /* Top Header */
+    /* Top Header — Ultra-Slim Floating Bar */
     .header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 30;
-      padding: 10px 16px;
-      background: rgba(9, 15, 29, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(251, 191, 36, 0.32);
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
+      position: fixed; top: 8px; left: 10px; right: 10px; z-index: 30;
+      padding: 6px 12px; border-radius: 12px;
+      background: rgba(9, 15, 29, 0.76);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(251, 191, 36, 0.28);
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
     }
-    .brand-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(245, 158, 11, 0.16); border: 1px solid rgba(251, 191, 36, 0.5);
-      color: #fbbf24; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
-      letter-spacing: 0.5px; text-transform: uppercase;
+    .brand-badge { display: none; }
+    .title {
+      font-size: 12.5px; font-weight: 800; color: #f8fafc; letter-spacing: 0.2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 52vw;
     }
-    .title { font-size: 14px; font-weight: 800; color: #f8fafc; letter-spacing: 0.2px; margin-top: 2px; }
-    .sub { font-size: 11px; color: #cbd5e1; }
-    .header-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .sub { display: none; }
+    .header-actions { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
 
-    /* Side Info / Contract & Feedback Drawer */
+    /* Side Info / Contract & Feedback Drawer — Collapsed by Default */
     .side-panel {
-      position: fixed; top: 74px; left: 12px; z-index: 25;
-      width: 325px; max-height: calc(100vh - 168px); overflow-y: auto;
-      background: rgba(15, 23, 42, 0.91);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(148, 163, 184, 0.26);
+      position: fixed; top: 52px; left: 10px; z-index: 35;
+      width: min(315px, calc(100vw - 20px)); max-height: calc(100vh - 110px); overflow-y: auto;
+      background: rgba(9, 15, 29, 0.94);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(251, 191, 36, 0.35);
       border-radius: 14px; padding: 12px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
-      transition: transform 0.25s ease, opacity 0.25s ease;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
+      transition: transform 0.22s ease, opacity 0.22s ease;
     }
-    .side-panel.collapsed { transform: translateX(-350px); opacity: 0; pointer-events: none; }
+    .side-panel.collapsed { transform: translateX(-115%); opacity: 0; pointer-events: none; }
     .panel-title {
       font-size: 11px; font-weight: 800; color: #fbbf24; text-transform: uppercase;
       letter-spacing: 0.6px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
@@ -73,13 +71,8 @@
     }
     input[type="range"] { width: 100%; accent-color: #fbbf24; cursor: pointer; }
 
-    /* Legend Right Pill */
-    .legend-box {
-      position: fixed; top: 74px; right: 12px; z-index: 25;
-      background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(10px);
-      border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 12px;
-      padding: 10px 12px; width: 235px; font-size: 11px;
-    }
+    /* Legend hidden so viewport stays 100% unobstructed */
+    .legend-box { display: none !important; }
     .leg-row { display: flex; align-items: center; gap: 7px; margin-top: 5px; color: #e2e8f0; font-size: 10.5px; }
     .swatch-box { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
@@ -96,21 +89,22 @@
     .modal-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
     .modal-imgs img { width: 100%; border-radius: 8px; border: 1px solid #334155; }
 
-    /* Bottom Controls */
+    /* Bottom Controls — Compact Single-Row Scrollable Dock */
     .controls {
-      position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
-      z-index: 30; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
-      width: 97%; max-width: 1020px;
-      background: rgba(9, 15, 29, 0.92);
-      padding: 8px 12px; border-radius: 16px;
+      position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%);
+      z-index: 30; display: flex; gap: 5px; flex-wrap: nowrap; overflow-x: auto;
+      max-width: 96vw; scrollbar-width: none; -ms-overflow-style: none;
+      background: rgba(9, 15, 29, 0.82);
+      padding: 5px 8px; border-radius: 999px;
       border: 1px solid rgba(251, 191, 36, 0.28);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
     }
+    .controls::-webkit-scrollbar { display: none; }
     .btn {
-      background: #1e293b; color: #e2e8f0; border: 1px solid #475569;
-      padding: 6px 11px; border-radius: 999px; font-size: 11px; font-weight: 700;
-      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;
+      background: rgba(30, 41, 59, 0.9); color: #e2e8f0; border: 1px solid #475569;
+      padding: 5px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 700;
+      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0;
     }
     .btn:hover { border-color: #fbbf24; color: #fff; }
     .btn.active {
@@ -130,7 +124,7 @@
     #labels-layer { position: fixed; inset: 0; pointer-events: none; z-index: 15; overflow: hidden; }
     .map-label {
       position: absolute; transform: translate(-50%, -100%);
-      padding: 2px 6px; border-radius: 5px; font-size: 10px; font-weight: 800;
+      padding: 1.5px 5px; border-radius: 4px; font-size: 9px; font-weight: 700;
       white-space: nowrap; pointer-events: none;
       text-shadow: 0 1px 2px rgba(0,0,0,0.95);
     }
@@ -152,8 +146,12 @@
     .progress-fill { height: 100%; width: 20%; background: linear-gradient(90deg, #fbbf24, #22c55e); transition: width 0.2s ease; }
 
     @media (max-width: 820px) {
-      .side-panel { width: 275px; top: 86px; }
-      .legend-box { display: none; }
+      .side-panel { width: calc(100vw - 16px); top: 48px; left: 8px; max-height: calc(100vh - 104px); }
+      .header { padding: 5px 9px; top: 6px; left: 8px; right: 8px; }
+      .title { font-size: 11.5px; max-width: 42vw; }
+      .header-actions .btn { padding: 4px 7px; font-size: 9.8px; }
+      .controls { bottom: 6px; padding: 4px 6px; max-width: 96vw; }
+      .controls .btn { padding: 4px 8px; font-size: 9.8px; }
       .modal-imgs { grid-template-columns: 1fr; }
     }
   </style>
@@ -169,19 +167,18 @@
 <body>
   <div class="header">
     <div>
-      <span class="brand-badge">autoAbode Defence 3D • CWE Bikaner (GEMC-511687719390797)</span>
-      <div class="title">BIKANER 8.0 FT × 6.0 FT ARMOURED REGIMENT CANTONMENT 3D MODEL (PHASE-I &amp; II)</div>
-      <div class="sub">Elevated Building Heights (1.7×) • Full Architectural &amp; Ground Textures • Printed 8.0 ft × 6.0 ft Rulers • 5mm Acrylic Cover &amp; Wooden Table</div>
+      <span class="brand-badge">autoAbode Defence 3D</span>
+      <div class="title">🏛️ Bikaner 8×6 ft Cantonment 3D Model</div>
+      <div class="sub"></div>
     </div>
     <div class="header-actions">
-      <button class="btn" onclick="togglePanel()">📋 Contract &amp; Feedback</button>
-      <button class="btn" onclick="toggleRefModal(true)">📐 MES Site Plan &amp; Render</button>
-      <a class="btn accent" href="./assets/bikaner_8x6ft_elevated_2_6x.stl" download="Bikaner_8x6ft_Elevated_PrintReady.stl">⬇ Download Elevated STL</a>
-      <a class="btn" href="./assets/bikaner_model.stl" download="Bikaner_Original_CAD.stl">⬇ Raw STL</a>
+      <button class="btn" onclick="togglePanel()">ℹ️ Specs &amp; Height</button>
+      <button class="btn" onclick="toggleRefModal(true)">📐 Plan</button>
+      <a class="btn accent" href="./assets/bikaner_8x6ft_elevated_2_6x.stl" download="Bikaner_8x6ft_Elevated_PrintReady.stl">⬇ STL</a>
     </div>
   </div>
 
-  <div class="side-panel" id="sidePanel">
+  <div class="side-panel collapsed" id="sidePanel">
     <div class="panel-title">
       <span>GeM Specs &amp; CEO Feedback Covered</span>
       <button class="btn" style="padding:2px 7px;font-size:10px;" onclick="togglePanel()">✕</button>
@@ -262,7 +259,7 @@
     <button class="btn" id="modePhase" onclick="setTexMode('phase')">🎨 Phase-I vs Phase-II Colors</button>
     <button class="btn" id="modeCad" onclick="setTexMode('cad')">📐 MES CAD Blueprint</button>
     <button class="btn blue" id="btnTour" onclick="toggleWalkthrough()">🎥 3D Walkthrough Tour</button>
-    <button class="btn active" id="btnLabels" onclick="toggleLabels()">🏷️ Bldg Schedule (#01–#66)</button>
+    <button class="btn" id="btnLabels" onclick="toggleLabels()">🏷️ Labels</button>
     <button class="btn active" id="btnBox" onclick="toggleAcrylicBox()">🧊 5mm Acrylic Cover</button>
     <button class="btn active" id="btnTable" onclick="toggleWoodenTable()">🪵 8×6 ft Wooden Table</button>
     <button class="btn" onclick="setCamView('iso')">🧭 Isometric</button>
@@ -296,7 +293,7 @@
 
     let heightMult = 1.7;
     let texMode = 'real';
-    let showLabels = true;
+    let showLabels = false;
     let showAcrylic = true;
     let showTable = true;
     let tourActive = false;
@@ -724,11 +721,10 @@
     }
 
     function setupLabels() {
-      // Permanent 8.0 FT & 6.0 FT Dimension Badges on Both Sides (Matching CEO's Annotated Screenshot!)
-      registerLabel('📏 LENGTH: 8.0 FT (2,438 mm)', () => new THREE.Vector3(-BOARD_W / 2 - 5, 4.5, 0), 'lbl-dim', true);
-      registerLabel('📏 LENGTH: 8.0 FT (2,438 mm)', () => new THREE.Vector3(BOARD_W / 2 + 5, 4.5, 25), 'lbl-dim', true);
-      registerLabel('📏 BREADTH: 6.0 FT (1,828 mm)', () => new THREE.Vector3(0, 4.5, BOARD_L / 2 + 5), 'lbl-dim', true);
-      registerLabel('📏 BREADTH: 6.0 FT (1,828 mm) • ⬆ NORTH', () => new THREE.Vector3(-12, 4.5, -BOARD_L / 2 - 5), 'lbl-dim', true);
+      registerLabel('📏 LENGTH: 8.0 FT (2,438 mm)', () => new THREE.Vector3(-BOARD_W / 2 - 5, 4.5, 0), 'lbl-dim', false);
+      registerLabel('📏 LENGTH: 8.0 FT (2,438 mm)', () => new THREE.Vector3(BOARD_W / 2 + 5, 4.5, 25), 'lbl-dim', false);
+      registerLabel('📏 BREADTH: 6.0 FT (1,828 mm)', () => new THREE.Vector3(0, 4.5, BOARD_L / 2 + 5), 'lbl-dim', false);
+      registerLabel('📏 BREADTH: 6.0 FT (1,828 mm) • ⬆ NORTH', () => new THREE.Vector3(-12, 4.5, -BOARD_L / 2 - 5), 'lbl-dim', false);
 
       for (const b of BUILDING_PINS) {
         registerLabel(`${b.id}: ${b.name}`, () => {
@@ -741,6 +737,7 @@
 
     function updateHtmlLabels() {
       const w = window.innerWidth, h = window.innerHeight;
+      const placed = [];
       for (const item of htmlLabels) {
         if (!showLabels && !item.always) {
           item.el.style.display = 'none';
@@ -748,14 +745,33 @@
         }
         const pos = typeof item.worldPosOrFn === 'function' ? item.worldPosOrFn() : item.worldPosOrFn.clone();
         const proj = pos.project(camera);
-        if (proj.z > 1 || proj.x < -1.06 || proj.x > 1.06 || proj.y < -1.06 || proj.y > 1.06) {
+        if (proj.z > 1 || proj.x < -0.96 || proj.x > 0.96 || proj.y < -0.86 || proj.y > 0.88) {
           item.el.style.display = 'none';
           continue;
         }
+        const sx = (proj.x * 0.5 + 0.5) * w;
+        const sy = (-proj.y * 0.5 + 0.5) * h;
+        let collide = false;
+        for (const p of placed) {
+          if (Math.abs(sx - p.x) < 88 && Math.abs(sy - p.y) < 22) { collide = true; break; }
+        }
+        if (collide) {
+          item.el.style.display = 'none';
+          continue;
+        }
+        placed.push({ x: sx, y: sy });
         item.el.style.display = 'block';
-        item.el.style.left = ((proj.x * 0.5 + 0.5) * w) + 'px';
-        item.el.style.top = ((-proj.y * 0.5 + 0.5) * h) + 'px';
+        item.el.style.left = sx + 'px';
+        item.el.style.top = sy + 'px';
       }
+    }
+
+    function fitCameraForScreen() {
+      const aspect = window.innerWidth / Math.max(1, window.innerHeight);
+      const mult = aspect < 0.85 ? 1.52 : (aspect < 1.2 ? 1.18 : 0.95);
+      camera.position.set(-135 * mult, 148 * mult, 205 * mult);
+      controls.target.set(0, 4, 8);
+      controls.update();
     }
 
     async function init() {
@@ -810,6 +826,7 @@
       buildCantonmentEnrichments();
       buildAcrylicAndWoodenTable();
       setupLabels();
+      fitCameraForScreen();
 
       setProgress(100, 'Ready!');
       setTimeout(() => {
