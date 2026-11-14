@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>CWE Bikaner (GEMC-511687719390797) — 8.0 ft × 6.0 ft Armoured Regiment 3D Scale Model | autoAbode</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+    body, html {
+      width: 100%; height: 100%; overflow: hidden;
+      background: radial-gradient(circle at 50% 35%, #172033 0%, #0b1120 72%, #020617 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #f8fafc;
+    }
+    #canvas-container { width: 100vw; height: 100vh; position: relative; }
+
+    /* Top Header */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+      padding: 10px 16px;
+      background: rgba(9, 15, 29, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(251, 191, 36, 0.32);
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .brand-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(245, 158, 11, 0.16); border: 1px solid rgba(251, 191, 36, 0.5);
+      color: #fbbf24; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .title { font-size: 14px; font-weight: 800; color: #f8fafc; letter-spacing: 0.2px; margin-top: 2px; }
+    .sub { font-size: 11px; color: #cbd5e1; }
+    .header-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+    /* Side Info / Contract & Feedback Drawer */
+    .side-panel {
+      position: fixed; top: 74px; left: 12px; z-index: 25;
+      width: 325px; max-height: calc(100vh - 168px); overflow-y: auto;
+      background: rgba(15, 23, 42, 0.91);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      border-radius: 14px; padding: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .side-panel.collapsed { transform: translateX(-350px); opacity: 0; pointer-events: none; }
+    .panel-title {
+      font-size: 11px; font-weight: 800; color: #fbbf24; text-transform: uppercase;
+      letter-spacing: 0.6px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .spec-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px;
+    }
+    .spec-card {
+      background: rgba(30, 41, 59, 0.78); border: 1px solid rgba(71, 85, 105, 0.55);
+      border-radius: 8px; padding: 6px 8px;
+    }
+    .spec-k { font-size: 9px; color: #94a3b8; text-transform: uppercase; font-weight: 700; }
+    .spec-v { font-size: 11px; color: #f8fafc; font-weight: 800; margin-top: 1px; }
+
+    .check-list { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+    .check-list li {
+      font-size: 11px; color: #e2e8f0; line-height: 1.35;
+      background: rgba(30, 41, 59, 0.58); border-left: 3px solid #22c55e;
+      padding: 5px 7px; border-radius: 0 6px 6px 0;
+    }
+    .check-list li strong { color: #fbbf24; }
+
+    .slider-row { margin-top: 8px; }
+    .slider-label {
+      display: flex; justify-content: space-between; font-size: 11px; color: #cbd5e1; font-weight: 700; margin-bottom: 3px;
+    }
+    input[type="range"] { width: 100%; accent-color: #fbbf24; cursor: pointer; }
+
+    /* Legend Right Pill */
+    .legend-box {
+      position: fixed; top: 74px; right: 12px; z-index: 25;
+      background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 12px;
+      padding: 10px 12px; width: 235px; font-size: 11px;
+    }
+    .leg-row { display: flex; align-items: center; gap: 7px; margin-top: 5px; color: #e2e8f0; font-size: 10.5px; }
+    .swatch-box { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 60; background: rgba(2, 6, 23, 0.86);
+      display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: #0f172a; border: 1px solid #fbbf24; border-radius: 14px;
+      max-width: 980px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 14px;
+    }
+    .modal-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .modal-imgs img { width: 100%; border-radius: 8px; border: 1px solid #334155; }
+
+    /* Bottom Controls */
+    .controls {
+      position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
+      z-index: 30; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+      width: 97%; max-width: 1020px;
+      background: rgba(9, 15, 29, 0.92);
+      padding: 8px 12px; border-radius: 16px;
+      border: 1px solid rgba(251, 191, 36, 0.28);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+    }
+    .btn {
+      background: #1e293b; color: #e2e8f0; border: 1px solid #475569;
+      padding: 6px 11px; border-radius: 999px; font-size: 11px; font-weight: 700;
+      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;
+    }
+    .btn:hover { border-color: #fbbf24; color: #fff; }
+    .btn.active {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      border-color: #fbbf24; color: #fff;
+    }
+    .btn.accent {
+      background: linear-gradient(135deg, #059669, #0d9488);
+      border-color: #34d399; color: #fff;
+    }
+    .btn.blue {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      border-color: #38bdf8; color: #fff;
+    }
+
+    /* 3D HTML Labels */
+    #labels-layer { position: fixed; inset: 0; pointer-events: none; z-index: 15; overflow: hidden; }
+    .map-label {
+      position: absolute; transform: translate(-50%, -100%);
+      padding: 2px 6px; border-radius: 5px; font-size: 10px; font-weight: 800;
+      white-space: nowrap; pointer-events: none;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.95);
+    }
+    .lbl-ph1 { background: rgba(124, 45, 18, 0.90); color: #ffedd5; border: 1px solid #fb923c; }
+    .lbl-ph2 { background: rgba(30, 58, 138, 0.90); color: #dbeafe; border: 1px solid #60a5fa; }
+    .lbl-ground { background: rgba(6, 78, 59, 0.90); color: #d1fae5; border: 1px solid #34d399; }
+    .lbl-dim { background: rgba(15, 23, 42, 0.94); color: #facc15; border: 1.5px solid #facc15; font-size: 11px; padding: 3px 8px; }
+
+    .loader-overlay {
+      position: fixed; inset: 0; z-index: 80;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(2, 6, 23, 0.92); backdrop-filter: blur(8px); transition: opacity 0.35s ease;
+    }
+    .loader-box {
+      background: #0f172a; border: 1px solid #fbbf24; padding: 22px 28px;
+      border-radius: 16px; text-align: center; max-width: 370px; width: 88%;
+    }
+    .progress-bar { width: 100%; height: 8px; background: #1e293b; border-radius: 99px; overflow: hidden; margin-top: 12px; }
+    .progress-fill { height: 100%; width: 20%; background: linear-gradient(90deg, #fbbf24, #22c55e); transition: width 0.2s ease; }
+
+    @media (max-width: 820px) {
+      .side-panel { width: 275px; top: 86px; }
+      .legend-box { display: none; }
+      .modal-imgs { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <span class="brand-badge">autoAbode Defence 3D • CWE Bikaner (GEMC-511687719390797)</span>
+      <div class="title">BIKANER 8.0 FT × 6.0 FT ARMOURED REGIMENT CANTONMENT 3D MODEL (PHASE-I &amp; II)</div>
+      <div class="sub">Elevated Building Heights (2.6×) • Full Architectural &amp; Ground Textures • Printed 8.0 ft × 6.0 ft Rulers • 5mm Acrylic Cover &amp; Wooden Table</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="togglePanel()">📋 Contract &amp; Feedback</button>
+      <button class="btn" onclick="toggleRefModal(true)">📐 MES Site Plan &amp; Render</button>
+      <a class="btn accent" href="./assets/bikaner_8x6ft_elevated_2_6x.stl" download="Bikaner_8x6ft_Elevated_2.6x_PrintReady.stl">⬇ Download 2.6× STL</a>
+      <a class="btn" href="./assets/bikaner_model.stl" download="Bikaner_Original_CAD.stl">⬇ Raw STL</a>
+    </div>
+  </div>
+
+  <div class="side-panel" id="sidePanel">
+    <div class="panel-title">
+      <span>GeM Specs &amp; CEO Feedback Covered</span>
+      <button class="btn" style="padding:2px 7px;font-size:10px;" onclick="togglePanel()">✕</button>
+    </div>
+    <div class="spec-grid">
+      <div class="spec-card">
+        <div class="spec-k">Model Size (FT / MM)</div>
+        <div class="spec-v">8.0 ft × 6.0 ft (2438×1828 mm)</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-k">Drawing &amp; Scale</div>
+        <div class="spec-v">CEBT-5003-SP • 1:1200</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-k">GeM Contract</div>
+        <div class="spec-v">GEMC-511687719390797</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-k">Scope Buildings</div>
+        <div class="spec-v">66 Zones (Ph-I &amp; Ph-II)</div>
+      </div>
+    </div>
+
+    <ul class="check-list">
+      <li><strong>Increased Building Heights (13-Nov Feedback):</strong> All barracks, messes, offices, mandir &amp; garages elevated <strong>2.6× default</strong> (adjustable <code>1.0× – 4.2×</code> live below) with multi-storey window &amp; roof detailing so every structure stands crisp &amp; tall.</li>
+      <li><strong>Full Architectural &amp; Cantonment Textures:</strong> Replaced flat grey STL clay with high-res asphalt roads, lush green lawns, parade/football/hockey turf, sandstone/plaster facades, terracotta/blue phase roofs, avenue trees &amp; T-90 tank park.</li>
+      <li><strong>Printed Size in FT on Both Sides:</strong> Bold <code>8.0 FT (2,438 mm)</code> Length &amp; <code>6.0 FT (1,828 mm)</code> Breadth rulers with <code>1 FT</code> tick marks printed directly on all edges of the physical base.</li>
+      <li><strong>3 Contract Deliverables Built-In:</strong> (1) <code>8 ft × 6 ft</code> 3D Scale Model + Automated Walkthrough, (2) <code>5 mm</code> Clear Acrylic Cover Box, (3) <code>8 ft × 6 ft</code> Designer Wooden Table.</li>
+    </ul>
+
+    <div class="slider-row">
+      <div class="slider-label"><span>Building Height Multiplier</span><span id="heightVal">2.6×</span></div>
+      <input type="range" min="1.0" max="4.2" step="0.1" value="2.6" oninput="setBuildingHeightScale(this.value)" />
+    </div>
+  </div>
+
+  <div class="legend-box">
+    <div style="font-weight:800;color:#fbbf24;font-size:11px;text-transform:uppercase;letter-spacing:0.4px;">Cantonment Zone Legend</div>
+    <div class="leg-row"><span class="swatch-box" style="background:#c2410c;"></span>Phase-I Bldgs (Sl. 01–41A: OR/JCO/Officers/Armd Tech)</div>
+    <div class="leg-row"><span class="swatch-box" style="background:#2563eb;"></span>Phase-II Bldgs (Sl. 42–66: Mandir, Canteen, MI, Sheds)</div>
+    <div class="leg-row"><span class="swatch-box" style="background:#15803d;"></span>Parade (#58), Football (#62), Hockey (#63) &amp; Courts</div>
+    <div class="leg-row"><span class="swatch-box" style="background:#4d5d2b;"></span>Armoured Regt T-90 Tank &amp; ALS Garage Zone (#22–#30)</div>
+    <div class="leg-row"><span class="swatch-box" style="background:#facc15;"></span>Printed 8.0 FT × 6.0 FT Base Scale Rulers</div>
+  </div>
+
+  <div class="modal-overlay" id="refModal" onclick="if(event.target===this)toggleRefModal(false)">
+    <div class="modal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-weight:800;color:#fbbf24;font-size:14px;">MES Official Site Plan (CEBT-5003-SP-2025) &amp; Orthographic Cantonment Reference</div>
+        <button class="btn" onclick="toggleRefModal(false)">✕ Close</button>
+      </div>
+      <div class="modal-imgs">
+        <div>
+          <div style="font-size:11px;color:#cbd5e1;margin-bottom:4px;font-weight:700;">1. MES Site Plan (Armd Regt at BKN — Scale 1:1200, Ph-I &amp; Ph-II)</div>
+          <img src="./assets/bikaner_cad_plan.jpg" alt="MES Site Plan" />
+        </div>
+        <div>
+          <div style="font-size:11px;color:#cbd5e1;margin-bottom:4px;font-weight:700;">2. Architectural Cantonment Render Integrated on 8ft × 6ft Base</div>
+          <img src="./assets/bikaner_reference_render.jpg" alt="Architectural Render" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loader-overlay" id="loader">
+    <div class="loader-box">
+      <div style="font-size:15px;font-weight:800;color:#fbbf24;">Loading Bikaner 8ft × 6ft 3D Cantonment...</div>
+      <div style="font-size:12px;color:#94a3b8;margin-top:5px;" id="loadStatus">Parsing bikaner_model.stl &amp; Applying Architectural Textures...</div>
+      <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+    </div>
+  </div>
+
+  <div id="labels-layer"></div>
+  <div id="canvas-container"></div>
+
+  <div class="controls">
+    <button class="btn active" id="modeReal" onclick="setTexMode('real')">🏛️ Realistic Textured</button>
+    <button class="btn" id="modePhase" onclick="setTexMode('phase')">🎨 Phase-I vs Phase-II Colors</button>
+    <button class="btn" id="modeCad" onclick="setTexMode('cad')">📐 MES CAD Blueprint</button>
+    <button class="btn blue" id="btnTour" onclick="toggleWalkthrough()">🎥 3D Walkthrough Tour</button>
+    <button class="btn active" id="btnLabels" onclick="toggleLabels()">🏷️ Bldg Schedule (#01–#66)</button>
+    <button class="btn active" id="btnBox" onclick="toggleAcrylicBox()">🧊 5mm Acrylic Cover</button>
+    <button class="btn active" id="btnTable" onclick="toggleWoodenTable()">🪵 8×6 ft Wooden Table</button>
+    <button class="btn" onclick="setCamView('iso')">🧭 Isometric</button>
+    <button class="btn" onclick="setCamView('top')">📏 Top 8×6 ft Plan</button>
+    <button class="btn" onclick="setCamView('barracks')">🏢 Living &amp; Admin</button>
+    <button class="btn" onclick="setCamView('tanks')">🛡️ Tank Garages</button>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+
+    // Exact STL bounds in mm: X [1675.72 .. 3504.52] (1828.8 mm = 6.0 ft), Z [-1219.20 .. +1219.20] (2438.4 mm = 8.0 ft)
+    // Scale by 0.1 -> 182.88 units (6.0 ft Breadth) x 243.84 units (8.0 ft Length)
+    const SCALE = 0.1;
+    const CENTER_X = (1675.7163 + 3504.5164) * 0.5; // 2590.116
+    const BOARD_W = 182.88; // 6.0 FT Breadth (X)
+    const BOARD_L = 243.84; // 8.0 FT Length (Z)
+
+    // Cantonment L-shaped site feature bounds in raw STL mm
+    const FEAT = { minX: 1691.7, maxX: 3480.6, minZ: -1142.4, maxZ: 1120.1 };
+    const ROAD_Y_MM = 34.2;
+
+    let scene, camera, renderer, controls;
+    let stlMesh = null, rawPositions = null, stlGeo = null;
+    let orthoTex = null, cadTex = null, facadeAtlasTex = null, phaseAtlasTex = null;
+    let detailGroup = new THREE.Group();
+    let acrylicGroup = new THREE.Group();
+    let tableGroup = new THREE.Group();
+
+    let heightMult = 2.6;
+    let texMode = 'real';
+    let showLabels = true;
+    let showAcrylic = true;
+    let showTable = true;
+    let tourActive = false;
+    let tourAngle = 0;
+    const htmlLabels = [];
+
+    const container = document.getElementById('canvas-container');
+    const labelsLayer = document.getElementById('labels-layer');
+
+    function setProgress(pct, txt) {
+      document.getElementById('progFill').style.width = pct + '%';
+      if (txt) document.getElementById('loadStatus').textContent = txt;
+    }
+
+    // Convert raw STL (mm) coords to centered scene coords
+    function mmToScene(xMm, yMm, zMm) {
+      const adjY = yMm > ROAD_Y_MM ? ROAD_Y_MM + (yMm - ROAD_Y_MM) * heightMult : yMm;
+      return new THREE.Vector3((xMm - CENTER_X) * SCALE, adjY * SCALE, zMm * SCALE);
+    }
+
+    // Key Numbered Buildings & Zones from Official MES Schedule (Drawing CEBT-5003-SP-2025 / GEMC-511687719390797)
+    const BUILDING_PINS = [
+      { id: '#15 & #16', name: '4× Courtyard OR/Havildar Barracks (D/S)', xMm: 2150, zMm: 720, yMm: 86, cls: 'lbl-ph1' },
+      { id: '#03 & #17', name: 'Dining Halls & Cook Houses', xMm: 2150, zMm: 960, yMm: 62, cls: 'lbl-ph1' },
+      { id: '#65', name: 'Office-cum-Admin Block (D/S, 1524 sqm)', xMm: 2120, zMm: 310, yMm: 85, cls: 'lbl-ph2' },
+      { id: '#09', name: 'Officers Mess (874 sqm) & Roundabout', xMm: 2350, zMm: 270, yMm: 72, cls: 'lbl-ph1' },
+      { id: '#04 & #12', name: 'Quarter Guard, Armoury & SAA Store', xMm: 1830, zMm: 340, yMm: 68, cls: 'lbl-ph1' },
+      { id: '#26 & #24', name: 'Armoured Tank (A-Veh) & Truck Repair Bays', xMm: 2340, zMm: -390, yMm: 76, cls: 'lbl-ph1' },
+      { id: '#27–#30', name: 'ALS / HMV / Gypsy / Tank Trailer Garages', xMm: 2290, zMm: -130, yMm: 62, cls: 'lbl-ph1' },
+      { id: '#01, #02 & #08', name: 'JCO Living Blocks (D/S) & JCO Mess', xMm: 2440, zMm: -730, yMm: 82, cls: 'lbl-ph1' },
+      { id: '#58 & #06', name: 'Parade Ground (12,467 sqm) & Saluting Base', xMm: 2940, zMm: 310, yMm: 36, cls: 'lbl-ground' },
+      { id: '#62', name: 'Football Ground (91.1m × 56.7m)', xMm: 3290, zMm: 290, yMm: 36, cls: 'lbl-ground' },
+      { id: '#63', name: 'Hockey Ground', xMm: 3290, zMm: 540, yMm: 36, cls: 'lbl-ground' },
+      { id: '#59–#61', name: 'Basketball, Volleyball & Tennis Courts', xMm: 3250, zMm: 780, yMm: 42, cls: 'lbl-ground' },
+      { id: '#48', name: 'Regimental Mandir / Religious Inst.', xMm: 2810, zMm: 560, yMm: 92, cls: 'lbl-ph2' },
+      { id: '#50–#52', name: 'URC Canteen, MI Room & Welfare Centre', xMm: 2820, zMm: 830, yMm: 72, cls: 'lbl-ph2' },
+      { id: '#57', name: '27m Field Miniature Firing Range', xMm: 3120, zMm: 1010, yMm: 75, cls: 'lbl-ph2' },
+      { id: '#64 & #66', name: '225 KL Water Tank & STP Plant', xMm: 3370, zMm: 1030, yMm: 80, cls: 'lbl-ph2' }
+    ];
+
+    function makeFacadeAtlas(isPhaseColorMode) {
+      // Left half (u: 0..0.5) = Multi-storey architectural walls with windows & cornices
+      // Top-right (u: 0.5..1.0, v: 0.5..1.0) = Phase-I Terracotta / Sandstone Roof
+      // Bottom-right (u: 0.5..1.0, v: 0.0..0.5) = Phase-II Royal Blue / Cool Slate Roof
+      const c = document.createElement('canvas');
+      c.width = 1024; c.height = 1024;
+      const ctx = c.getContext('2d');
+
+      // 1) Wall region (x: 0..512, y: 0..1024)
+      ctx.fillStyle = isPhaseColorMode ? '#f8fafc' : '#efe6d5';
+      ctx.fillRect(0, 0, 512, 1024);
+
+      // Horizontal floor slab bands + dark glazed windows
+      const rows = 14, cols = 8;
+      for (let r = 0; r < rows; r++) {
+        const y = r * (1024 / rows);
+        // Sandstone cornice / slab band
+        ctx.fillStyle = isPhaseColorMode ? '#cbd5e1' : '#d6c3a5';
+        ctx.fillRect(0, y, 512, 9);
+
+        for (let col = 0; col < cols; col++) {
+          const x = 10 + col * 62;
+          // Window frame
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(x, y + 18, 40, 38);
+          // Glass reflection
+          ctx.fillStyle = '#38bdf8';
+          ctx.globalAlpha = 0.35;
+          ctx.fillRect(x + 3, y + 21, 15, 32);
+          ctx.globalAlpha = 1.0;
+          // Sunshade chajja
+          ctx.fillStyle = '#b45309';
+          ctx.fillRect(x - 3, y + 14, 46, 5);
+        }
+      }
+
+      // 2) Phase-I Roof (x: 512..1024, y: 0..512 -> v: 0.5..1.0)
+      ctx.fillStyle = isPhaseColorMode ? '#c2410c' : '#9a3412';
+      ctx.fillRect(512, 0, 512, 512);
+      ctx.strokeStyle = 'rgba(255,237,213,0.28)';
+      ctx.lineWidth = 4;
+      for (let i = 524; i < 1024; i += 24) {
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 512); ctx.stroke();
+      }
+      ctx.strokeStyle = '#fdba74';
+      ctx.lineWidth = 10;
+      ctx.strokeRect(520, 8, 496, 496);
+
+      // 3) Phase-II / Industrial Shed Roof (x: 512..1024, y: 512..1024 -> v: 0.0..0.5)
+      ctx.fillStyle = isPhaseColorMode ? '#1d4ed8' : '#2563eb';
+      ctx.fillRect(512, 512, 512, 512);
+      ctx.strokeStyle = 'rgba(219,234,254,0.32)';
+      ctx.lineWidth = 4;
+      for (let i = 524; i < 1024; i += 20) {
+        ctx.beginPath(); ctx.moveTo(i, 512); ctx.lineTo(i, 1024); ctx.stroke();
+      }
+      ctx.strokeStyle = '#93c5fd';
+      ctx.lineWidth = 10;
+      ctx.strokeRect(520, 520, 496, 496);
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.anisotropy = 8;
+      return tex;
+    }
+
+    function makeBoardEdgeRuler(labelMain, mmText, feetCount) {
+      const c = document.createElement('canvas');
+      c.width = 2048; c.height = 190;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(3, 3, c.width - 6, c.height - 6);
+
+      // 1-foot & quarter-foot ticks
+      const totalSub = feetCount * 4;
+      for (let i = 0; i <= totalSub; i++) {
+        const x = 48 + (i / totalSub) * (c.width - 96);
+        const isFt = i % 4 === 0;
+        ctx.strokeStyle = isFt ? '#facc15' : '#94a3b8';
+        ctx.lineWidth = isFt ? 6 : 2.5;
+        ctx.beginPath();
+        ctx.moveTo(x, 6);
+        ctx.lineTo(x, isFt ? 56 : 30);
+        ctx.stroke();
+        if (isFt) {
+          ctx.fillStyle = '#facc15';
+          ctx.font = 'bold 32px Segoe UI, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(`${i / 4} FT`, x, 90);
+        }
+      }
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 46px Segoe UI, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`◀────  ${labelMain} (${mmText})  •  SCALE 1:1200  ────▶`, c.width / 2, 156);
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 8;
+      return tex;
+    }
+
+    function buildMultiMaterialSTL(loadedGeo) {
+      // Split triangles into Group 0 (Ground / Roads / Turfs / Courtyards: Y <= 35.8) and Group 1 (Elevated Buildings: Y > 35.8)
+      stlGeo = loadedGeo.toNonIndexed();
+      const pos = stlGeo.attributes.position;
+      stlGeo.computeVertexNormals();
+      const norm = stlGeo.attributes.normal;
+
+      rawPositions = new Float32Array(pos.array.length);
+      rawPositions.set(pos.array);
+
+      const uvs = new Float32Array((pos.count) * 2);
+      const groundIndices = [];
+      const bldgIndices = [];
+
+      const triCount = pos.count / 3;
+      for (let t = 0; t < triCount; t++) {
+        const i0 = t * 3, i1 = t * 3 + 1, i2 = t * 3 + 2;
+        const y0 = rawPositions[i0 * 3 + 1], y1 = rawPositions[i1 * 3 + 1], y2 = rawPositions[i2 * 3 + 1];
+        const maxY = Math.max(y0, y1, y2);
+        const avgX = (rawPositions[i0 * 3] + rawPositions[i1 * 3] + rawPositions[i2 * 3]) / 3;
+        const avgZ = (rawPositions[i0 * 3 + 2] + rawPositions[i1 * 3 + 2] + rawPositions[i2 * 3 + 2]) / 3;
+        const ny = Math.abs((norm.getY(i0) + norm.getY(i1) + norm.getY(i2)) / 3);
+
+        const isBuilding = maxY > 36.0;
+        if (!isBuilding) {
+          groundIndices.push(i0, i1, i2);
+          for (const idx of [i0, i1, i2]) {
+            const x = rawPositions[idx * 3];
+            const z = rawPositions[idx * 3 + 2];
+            const u = Math.min(0.998, Math.max(0.002, (x - FEAT.minX) / (FEAT.maxX - FEAT.minX)));
+            const v = Math.min(0.998, Math.max(0.002, 1.0 - (z - FEAT.minZ) / (FEAT.maxZ - FEAT.minZ)));
+            uvs[idx * 2] = u;
+            uvs[idx * 2 + 1] = v;
+          }
+        } else {
+          bldgIndices.push(i0, i1, i2);
+          // Determine Phase-I vs Phase-II zone for roof color (East/South-East zone x > 2680 & z > 420 or Admin #65 or Northern Metal Tank Sheds)
+          const isPhase2OrBlueShed = (avgX > 2680 && avgZ > 420) || (avgZ < -260 && avgZ > -560 && avgX > 2050);
+          for (const idx of [i0, i1, i2]) {
+            const x = rawPositions[idx * 3];
+            const y = rawPositions[idx * 3 + 1];
+            const z = rawPositions[idx * 3 + 2];
+            if (ny > 0.58) {
+              // Roof UV in right half of atlas (u: 0.55..0.95)
+              const ru = 0.55 + (((x + z) * 0.002) % 0.38 + 0.38) % 0.38;
+              const rv = isPhase2OrBlueShed ? 0.25 : 0.75;
+              uvs[idx * 2] = ru;
+              uvs[idx * 2 + 1] = rv;
+            } else {
+              // Vertical facade wall UV in left half of atlas (u: 0.04..0.46)
+              const horiz = (Math.abs(norm.getX(idx)) > 0.5 ? z : x) * 0.006;
+              const wu = 0.05 + ((horiz % 0.40 + 0.40) % 0.40);
+              const wv = ((y - ROAD_Y_MM) * 0.018 * heightMult);
+              uvs[idx * 2] = wu;
+              uvs[idx * 2 + 1] = wv;
+            }
+          }
+        }
+      }
+
+      // Reorder geometry via index buffer with two material groups
+      const allIndices = [...groundIndices, ...bldgIndices];
+      stlGeo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+      stlGeo.setIndex(allIndices);
+      stlGeo.clearGroups();
+      stlGeo.addGroup(0, groundIndices.length, 0);
+      stlGeo.addGroup(groundIndices.length, bldgIndices.length, 1);
+
+      applyScaledPositions();
+
+      const groundMat = new THREE.MeshStandardMaterial({
+        map: orthoTex,
+        roughness: 0.72,
+        metalness: 0.06
+      });
+      const bldgMat = new THREE.MeshStandardMaterial({
+        map: facadeAtlasTex,
+        roughness: 0.48,
+        metalness: 0.12
+      });
+
+      stlMesh = new THREE.Mesh(stlGeo, [groundMat, bldgMat]);
+      stlMesh.castShadow = true;
+      stlMesh.receiveShadow = true;
+      scene.add(stlMesh);
+    }
+
+    function applyScaledPositions() {
+      const pos = stlGeo.attributes.position;
+      const uvs = stlGeo.attributes.uv;
+      const norm = stlGeo.attributes.normal;
+      for (let i = 0; i < pos.count; i++) {
+        const xMm = rawPositions[i * 3];
+        const yMm = rawPositions[i * 3 + 1];
+        const zMm = rawPositions[i * 3 + 2];
+        const adjY = yMm > ROAD_Y_MM ? ROAD_Y_MM + (yMm - ROAD_Y_MM) * heightMult : yMm;
+        pos.setXYZ(i, (xMm - CENTER_X) * SCALE, adjY * SCALE, zMm * SCALE);
+        if (yMm > 36.0 && Math.abs(norm.getY(i)) <= 0.58) {
+          uvs.setY(i, (yMm - ROAD_Y_MM) * 0.014 * heightMult);
+        }
+      }
+      pos.needsUpdate = true;
+      uvs.needsUpdate = true;
+      stlGeo.computeVertexNormals();
+    }
+
+    function buildCantonmentEnrichments() {
+      // Adds 3D Printed 8ft x 6ft Base Frame Rulers + Northern Garage Sheds + T-90 Tanks + ALS Trucks + Parade Flag Mast + Avenue Trees + Watch Towers
+      while (detailGroup.children.length) detailGroup.remove(detailGroup.children[0]);
+
+      // 1) Physical 8.0 FT x 6.0 FT Base Frame Skirt with High-Contrast Printed FT Rulers on ALL 4 Sides
+      const ruler8Ft = makeBoardEdgeRuler('LENGTH: 8.0 FT', '2,438 mm', 8);
+      const ruler6Ft = makeBoardEdgeRuler('BREADTH: 6.0 FT', '1,828 mm', 6);
+
+      const darkSlabMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.75 });
+      const mat8 = new THREE.MeshStandardMaterial({ map: ruler8Ft, roughness: 0.35 });
+      const mat6 = new THREE.MeshStandardMaterial({ map: ruler6Ft, roughness: 0.35 });
+
+      // BoxGeometry faces: +X (East 8ft), -X (West 8ft), +Y (Top), -Y (Bottom), +Z (South 6ft), -Z (North 6ft)
+      const skirtGeo = new THREE.BoxGeometry(BOARD_W + 2.6, 5.2, BOARD_L + 2.6);
+      const skirtMesh = new THREE.Mesh(skirtGeo, [mat8, mat8, darkSlabMat, darkSlabMat, mat6, mat6]);
+      skirtMesh.position.set(0, -0.2, 0);
+      detailGroup.add(skirtMesh);
+
+      // Also place flat printed FT scale strips right on top of the East & North margins so they are legible even from top-down view!
+      const topStrip8 = new THREE.Mesh(
+        new THREE.PlaneGeometry(8.5, BOARD_L - 4),
+        new THREE.MeshBasicMaterial({ map: ruler8Ft })
+      );
+      topStrip8.rotation.x = -Math.PI / 2;
+      topStrip8.rotation.z = Math.PI / 2;
+      // Rotate UV via geometry rotation: use a slender box on top-right unused L-margin & left margin
+      const sideTopBarL = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.6, BOARD_L), [mat8, mat8, darkSlabMat, darkSlabMat, darkSlabMat, darkSlabMat]);
+      sideTopBarL.position.set(-BOARD_W / 2 - 1.2, 2.7, 0);
+      detailGroup.add(sideTopBarL);
+
+      // 2) Armoured Regiment Northern Garage Sheds (#27–#30 long garage row) + Miniature T-90 Tanks & ALS Trucks
+      const shedWallMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.5 });
+      const shedRoofMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, roughness: 0.4, metalness: 0.3 });
+      const shedH = 1.6 * heightMult;
+      for (let gx = 1920; gx <= 2560; gx += 92) {
+        const p = mmToScene(gx, 34, -125);
+        const shed = new THREE.Mesh(new THREE.BoxGeometry(7.2, shedH, 4.2), shedWallMat);
+        shed.position.set(p.x, 2.6 + shedH / 2, p.z);
+        detailGroup.add(shed);
+        const roof = new THREE.Mesh(new THREE.BoxGeometry(7.6, 0.35, 4.6), shedRoofMat);
+        roof.position.set(p.x, 2.6 + shedH + 0.18, p.z);
+        detailGroup.add(roof);
+      }
+
+      // Miniature T-90 Bhishma Tanks in Tank Park (#26 / West MT Park)
+      const oliveMat = new THREE.MeshStandardMaterial({ color: 0x4b5320, roughness: 0.55, metalness: 0.3 });
+      const barrelMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, metalness: 0.6 });
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 5; c++) {
+          const p = mmToScene(1810 + c * 34, 34, -190 - r * 42);
+          const tank = new THREE.Group();
+          const hull = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.55, 2.4), oliveMat);
+          hull.position.y = 0.28;
+          const turret = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.65, 0.42, 10), oliveMat);
+          turret.position.y = 0.72;
+          const gun = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.1, 8), barrelMat);
+          gun.rotation.x = Math.PI / 2;
+          gun.position.set(0, 0.74, 1.1);
+          tank.add(hull, turret, gun);
+          tank.position.set(p.x, 2.8, p.z);
+          detailGroup.add(tank);
+        }
+      }
+
+      // Parade Ground (#58) Saluting Base & Indian Tricolour Flag Mast (#06 / #07) + Goalposts (#62, #63)
+      const pFlag = mmToScene(2755, 34, 310);
+      const podium = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.9, 5.2), new THREE.MeshStandardMaterial({ color: 0xd97706 }));
+      podium.position.set(pFlag.x, 3.0, pFlag.z);
+      detailGroup.add(podium);
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.18, 8.5, 10), new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.8 }));
+      pole.position.set(pFlag.x, 7.2, pFlag.z);
+      detailGroup.add(pole);
+
+      // Overhead Water Tanks (#37 50KL North & #64 225KL South-East) + 3 Watch Towers (#33)
+      const towerCoords = [
+        [2040, -510, 0x94a3b8],
+        [3395, 985, 0x94a3b8],
+        [1735, -890, 0xd97706],
+        [2635, -890, 0xd97706],
+        [3455, 165, 0xd97706]
+      ];
+      for (const [tx, tz, col] of towerCoords) {
+        const pt = mmToScene(tx, 34, tz);
+        const th = 4.2 * Math.max(1.2, heightMult * 0.65);
+        const legs = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.85, th, 8), new THREE.MeshStandardMaterial({ color: 0xcbd5e1 }));
+        legs.position.set(pt.x, 2.6 + th / 2, pt.z);
+        const tankTop = new THREE.Mesh(new THREE.CylinderGeometry(1.35, 1.35, 1.8, 14), new THREE.MeshStandardMaterial({ color: col }));
+        tankTop.position.set(pt.x, 2.6 + th + 0.8, pt.z);
+        detailGroup.add(legs, tankTop);
+      }
+
+      // Lush Cantonment Avenue Trees along internal roads & boundary
+      const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5c3a21 });
+      const crownMat = new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.8 });
+      const treeLines = [];
+      for (let z = -920; z <= 960; z += 85) {
+        treeLines.push([1725, z], [2615, z]);
+      }
+      for (let x = 1780; x <= 3420; x += 90) {
+        if (x <= 2620) treeLines.push([x, -935], [x, 55]);
+        treeLines.push([x, 985]);
+        if (x >= 2650) treeLines.push([x, 125]);
+      }
+      for (const [tx, tz] of treeLines) {
+        const pt = mmToScene(tx, 33, tz);
+        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, 1.4, 6), trunkMat);
+        trunk.position.set(pt.x, 3.2, pt.z);
+        const crown = new THREE.Mesh(new THREE.SphereGeometry(1.05, 8, 7), crownMat);
+        crown.position.set(pt.x, 4.3, pt.z);
+        detailGroup.add(trunk, crown);
+      }
+
+      scene.add(detailGroup);
+    }
+
+    function buildAcrylicAndWoodenTable() {
+      // 1) 5mm Clear Cast Acrylic Cover Box (Contract Item #2)
+      acrylicGroup = new THREE.Group();
+      const boxH = 26;
+      const acrGeo = new THREE.BoxGeometry(BOARD_W + 2.8, boxH, BOARD_L + 2.8);
+      const acrMat = new THREE.MeshPhysicalMaterial({
+        color: 0xe0f2fe,
+        transparent: true,
+        opacity: 0.14,
+        roughness: 0.04,
+        transmission: 0.85,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+      const acrMesh = new THREE.Mesh(acrGeo, acrMat);
+      acrMesh.position.set(0, boxH / 2 + 2.4, 0);
+      acrylicGroup.add(acrMesh);
+
+      const acrEdges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(acrGeo),
+        new THREE.LineBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.65 })
+      );
+      acrEdges.position.copy(acrMesh.position);
+      acrylicGroup.add(acrEdges);
+      acrylicGroup.visible = showAcrylic;
+      scene.add(acrylicGroup);
+
+      // 2) 8.0 ft x 6.0 ft Designer Wooden Display Table (Contract Item #3)
+      tableGroup = new THREE.Group();
+      const teakMat = new THREE.MeshStandardMaterial({ color: 0x5c3618, roughness: 0.48, metalness: 0.08 });
+      const brassMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.28, metalness: 0.78 });
+
+      const tableTop = new THREE.Mesh(new THREE.BoxGeometry(BOARD_W + 10, 7.5, BOARD_L + 10), teakMat);
+      tableTop.position.set(0, -6.2, 0);
+      tableGroup.add(tableTop);
+
+      const trim = new THREE.Mesh(new THREE.BoxGeometry(BOARD_W + 10.6, 1.2, BOARD_L + 10.6), brassMat);
+      trim.position.set(0, -3.1, 0);
+      tableGroup.add(trim);
+
+      const lx = BOARD_W / 2 + 1, lz = BOARD_L / 2 + 1;
+      for (const [px, pz] of [[-lx, -lz], [lx, -lz], [-lx, lz], [lx, lz]]) {
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(6.2, 64, 6.2), teakMat);
+        leg.position.set(px, -41, pz);
+        tableGroup.add(leg);
+        const foot = new THREE.Mesh(new THREE.BoxGeometry(7.0, 3.0, 7.0), brassMat);
+        foot.position.set(px, -72, pz);
+        tableGroup.add(foot);
+      }
+      tableGroup.visible = showTable;
+      scene.add(tableGroup);
+    }
+
+    function registerLabel(text, worldPosOrFn, cls, always = false) {
+      const el = document.createElement('div');
+      el.className = `map-label ${cls}`;
+      el.textContent = text;
+      labelsLayer.appendChild(el);
+      htmlLabels.push({ el, worldPosOrFn, always });
+    }
+
+    function setupLabels() {
+      // Permanent 8.0 FT & 6.0 FT Dimension Badges on Both Sides (Matching CEO's Annotated Screenshot!)
+      registerLabel('📏 LENGTH: 8.0 FT (2,438 mm)', () => new THREE.Vector3(-BOARD_W / 2 - 5, 4.5, 0), 'lbl-dim', true);
+      registerLabel('📏 LENGTH: 8.0 FT (2,438 mm)', () => new THREE.Vector3(BOARD_W / 2 + 5, 4.5, 25), 'lbl-dim', true);
+      registerLabel('📏 BREADTH: 6.0 FT (1,828 mm)', () => new THREE.Vector3(0, 4.5, BOARD_L / 2 + 5), 'lbl-dim', true);
+      registerLabel('📏 BREADTH: 6.0 FT (1,828 mm) • ⬆ NORTH', () => new THREE.Vector3(-12, 4.5, -BOARD_L / 2 - 5), 'lbl-dim', true);
+
+      for (const b of BUILDING_PINS) {
+        registerLabel(`${b.id}: ${b.name}`, () => {
+          const p = mmToScene(b.xMm, b.yMm, b.zMm);
+          p.y += 2.6;
+          return p;
+        }, b.cls, false);
+      }
+    }
+
+    function updateHtmlLabels() {
+      const w = window.innerWidth, h = window.innerHeight;
+      for (const item of htmlLabels) {
+        if (!showLabels && !item.always) {
+          item.el.style.display = 'none';
+          continue;
+        }
+        const pos = typeof item.worldPosOrFn === 'function' ? item.worldPosOrFn() : item.worldPosOrFn.clone();
+        const proj = pos.project(camera);
+        if (proj.z > 1 || proj.x < -1.06 || proj.x > 1.06 || proj.y < -1.06 || proj.y > 1.06) {
+          item.el.style.display = 'none';
+          continue;
+        }
+        item.el.style.display = 'block';
+        item.el.style.left = ((proj.x * 0.5 + 0.5) * w) + 'px';
+        item.el.style.top = ((-proj.y * 0.5 + 0.5) * h) + 'px';
+      }
+    }
+
+    async function init() {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 1, 2400);
+      camera.position.set(-145, 155, 215);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.12;
+      container.appendChild(renderer.domElement);
+
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.target.set(0, 6, 12);
+      controls.maxPolarAngle = Math.PI * 0.49;
+      controls.minDistance = 30;
+      controls.maxDistance = 560;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.88));
+      const sun = new THREE.DirectionalLight(0xfff7ed, 1.65);
+      sun.position.set(-130, 230, 140);
+      sun.castShadow = true;
+      scene.add(sun);
+      const fill = new THREE.DirectionalLight(0x93c5fd, 0.5);
+      fill.position.set(160, 110, -140);
+      scene.add(fill);
+
+      setProgress(35, 'Loading Cantonment Textures & MES Site Plan...');
+      const texLoader = new THREE.TextureLoader();
+      [orthoTex, cadTex] = await Promise.all([
+        texLoader.loadAsync('./assets/bikaner_ortho_texture.jpg'),
+        texLoader.loadAsync('./assets/bikaner_cad_plan.jpg')
+      ]);
+      orthoTex.colorSpace = THREE.SRGBColorSpace;
+      orthoTex.anisotropy = 8;
+      cadTex.colorSpace = THREE.SRGBColorSpace;
+      cadTex.anisotropy = 8;
+
+      facadeAtlasTex = makeFacadeAtlas(false);
+      phaseAtlasTex = makeFacadeAtlas(true);
+
+      setProgress(70, 'Loading bikaner_model.stl & Elevating Building Heights (2.6×)...');
+      const stlLoader = new STLLoader();
+      const loadedGeo = await stlLoader.loadAsync('./assets/bikaner_model.stl');
+
+      buildMultiMaterialSTL(loadedGeo);
+      buildCantonmentEnrichments();
+      buildAcrylicAndWoodenTable();
+      setupLabels();
+
+      setProgress(100, 'Ready!');
+      setTimeout(() => {
+        const ld = document.getElementById('loader');
+        ld.style.opacity = '0';
+        setTimeout(() => ld.remove(), 380);
+      }, 250);
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      animate();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (tourActive) {
+        tourAngle += 0.0045;
+        camera.position.x = Math.sin(tourAngle) * 215;
+        camera.position.z = Math.cos(tourAngle) * 235;
+        camera.position.y = 125 + Math.sin(tourAngle * 2) * 22;
+        controls.target.set(0, 8, 0);
+      }
+      controls.update();
+      renderer.render(scene, camera);
+      updateHtmlLabels();
+    }
+
+    // Global UI Handlers
+    window.togglePanel = () => document.getElementById('sidePanel').classList.toggle('collapsed');
+    window.toggleRefModal = (open) => document.getElementById('refModal').classList.toggle('open', open);
+
+    window.setBuildingHeightScale = (val) => {
+      heightMult = parseFloat(val);
+      document.getElementById('heightVal').textContent = heightMult.toFixed(1) + '×';
+      applyScaledPositions();
+      buildCantonmentEnrichments();
+    };
+
+    window.setTexMode = (mode) => {
+      texMode = mode;
+      for (const id of ['modeReal', 'modePhase', 'modeCad']) {
+        document.getElementById(id).classList.remove('active');
+      }
+      if (mode === 'real') {
+        stlMesh.material[0].map = orthoTex;
+        stlMesh.material[1].map = facadeAtlasTex;
+        document.getElementById('modeReal').classList.add('active');
+      } else if (mode === 'phase') {
+        stlMesh.material[0].map = orthoTex;
+        stlMesh.material[1].map = phaseAtlasTex;
+        document.getElementById('modePhase').classList.add('active');
+      } else if (mode === 'cad') {
+        stlMesh.material[0].map = cadTex;
+        stlMesh.material[1].map = phaseAtlasTex;
+        document.getElementById('modeCad').classList.add('active');
+      }
+      stlMesh.material[0].needsUpdate = true;
+      stlMesh.material[1].needsUpdate = true;
+    };
+
+    window.toggleWalkthrough = () => {
+      tourActive = !tourActive;
+      document.getElementById('btnTour').classList.toggle('active', tourActive);
+      document.getElementById('btnTour').textContent = tourActive ? '⏸ Pause Walkthrough' : '🎥 3D Walkthrough Tour';
+    };
+
+    window.toggleLabels = () => {
+      showLabels = !showLabels;
+      document.getElementById('btnLabels').classList.toggle('active', showLabels);
+    };
+
+    window.toggleAcrylicBox = () => {
+      showAcrylic = !showAcrylic;
+      acrylicGroup.visible = showAcrylic;
+      document.getElementById('btnBox').classList.toggle('active', showAcrylic);
+    };
+
+    window.toggleWoodenTable = () => {
+      showTable = !showTable;
+      tableGroup.visible = showTable;
+      document.getElementById('btnTable').classList.toggle('active', showTable);
+    };
+
+    window.setCamView = (v) => {
+      tourActive = false;
+      document.getElementById('btnTour').classList.remove('active');
+      document.getElementById('btnTour').textContent = '🎥 3D Walkthrough Tour';
+      if (v === 'iso') {
+        camera.position.set(-145, 155, 215);
+        controls.target.set(0, 6, 12);
+      } else if (v === 'top') {
+        camera.position.set(0, 310, 0.1);
+        controls.target.set(0, 4, 0);
+      } else if (v === 'barracks') {
+        camera.position.set(-105, 72, 145);
+        controls.target.set(-25, 8, 55);
+      } else if (v === 'tanks') {
+        camera.position.set(-115, 78, -95);
+        controls.target.set(-25, 8, -42);
+      }
+      controls.update();
+    };
+
+    init();
+  </script>
+</body>
+</html>
