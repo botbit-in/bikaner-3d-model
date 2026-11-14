@@ -171,12 +171,12 @@
     <div>
       <span class="brand-badge">autoAbode Defence 3D • CWE Bikaner (GEMC-511687719390797)</span>
       <div class="title">BIKANER 8.0 FT × 6.0 FT ARMOURED REGIMENT CANTONMENT 3D MODEL (PHASE-I &amp; II)</div>
-      <div class="sub">Elevated Building Heights (2.6×) • Full Architectural &amp; Ground Textures • Printed 8.0 ft × 6.0 ft Rulers • 5mm Acrylic Cover &amp; Wooden Table</div>
+      <div class="sub">Elevated Building Heights (1.7×) • Full Architectural &amp; Ground Textures • Printed 8.0 ft × 6.0 ft Rulers • 5mm Acrylic Cover &amp; Wooden Table</div>
     </div>
     <div class="header-actions">
       <button class="btn" onclick="togglePanel()">📋 Contract &amp; Feedback</button>
       <button class="btn" onclick="toggleRefModal(true)">📐 MES Site Plan &amp; Render</button>
-      <a class="btn accent" href="./assets/bikaner_8x6ft_elevated_2_6x.stl" download="Bikaner_8x6ft_Elevated_2.6x_PrintReady.stl">⬇ Download 2.6× STL</a>
+      <a class="btn accent" href="./assets/bikaner_8x6ft_elevated_2_6x.stl" download="Bikaner_8x6ft_Elevated_PrintReady.stl">⬇ Download Elevated STL</a>
       <a class="btn" href="./assets/bikaner_model.stl" download="Bikaner_Original_CAD.stl">⬇ Raw STL</a>
     </div>
   </div>
@@ -206,15 +206,15 @@
     </div>
 
     <ul class="check-list">
-      <li><strong>Increased Building Heights (13-Nov Feedback):</strong> All barracks, messes, offices, mandir &amp; garages elevated <strong>2.6× default</strong> (adjustable <code>1.0× – 4.2×</code> live below) with multi-storey window &amp; roof detailing so every structure stands crisp &amp; tall.</li>
+      <li><strong>Increased Building Heights (13-Nov Feedback):</strong> All barracks, messes, offices, mandir &amp; garages elevated <strong>1.7× default</strong> (adjustable <code>1.0× – 3.5×</code> live below) with crisp 2–3 storey window &amp; roof detailing so every structure stands tall &amp; clear.</li>
       <li><strong>Full Architectural &amp; Cantonment Textures:</strong> Replaced flat grey STL clay with high-res asphalt roads, lush green lawns, parade/football/hockey turf, sandstone/plaster facades, terracotta/blue phase roofs, avenue trees &amp; T-90 tank park.</li>
       <li><strong>Printed Size in FT on Both Sides:</strong> Bold <code>8.0 FT (2,438 mm)</code> Length &amp; <code>6.0 FT (1,828 mm)</code> Breadth rulers with <code>1 FT</code> tick marks printed directly on all edges of the physical base.</li>
       <li><strong>3 Contract Deliverables Built-In:</strong> (1) <code>8 ft × 6 ft</code> 3D Scale Model + Automated Walkthrough, (2) <code>5 mm</code> Clear Acrylic Cover Box, (3) <code>8 ft × 6 ft</code> Designer Wooden Table.</li>
     </ul>
 
     <div class="slider-row">
-      <div class="slider-label"><span>Building Height Multiplier</span><span id="heightVal">2.6×</span></div>
-      <input type="range" min="1.0" max="4.2" step="0.1" value="2.6" oninput="setBuildingHeightScale(this.value)" />
+      <div class="slider-label"><span>Building Height Multiplier</span><span id="heightVal">1.7×</span></div>
+      <input type="range" min="1.0" max="3.5" step="0.1" value="1.7" oninput="setBuildingHeightScale(this.value)" />
     </div>
   </div>
 
@@ -294,7 +294,7 @@
     let acrylicGroup = new THREE.Group();
     let tableGroup = new THREE.Group();
 
-    let heightMult = 2.6;
+    let heightMult = 1.7;
     let texMode = 'real';
     let showLabels = true;
     let showAcrylic = true;
@@ -349,27 +349,23 @@
       ctx.fillStyle = isPhaseColorMode ? '#f8fafc' : '#efe6d5';
       ctx.fillRect(0, 0, 512, 1024);
 
-      // Horizontal floor slab bands + dark glazed windows
-      const rows = 14, cols = 8;
+      // Horizontal floor slab bands + realistic 2-3 storey cantonment glazed windows
+      const rows = 4, cols = 6;
       for (let r = 0; r < rows; r++) {
         const y = r * (1024 / rows);
-        // Sandstone cornice / slab band
-        ctx.fillStyle = isPhaseColorMode ? '#cbd5e1' : '#d6c3a5';
-        ctx.fillRect(0, y, 512, 9);
+        ctx.fillStyle = isPhaseColorMode ? '#cbd5e1' : '#d4be9c';
+        ctx.fillRect(0, y, 512, 22);
 
         for (let col = 0; col < cols; col++) {
-          const x = 10 + col * 62;
-          // Window frame
+          const x = 16 + col * 82;
           ctx.fillStyle = '#1e293b';
-          ctx.fillRect(x, y + 18, 40, 38);
-          // Glass reflection
+          ctx.fillRect(x, y + 54, 52, 118);
           ctx.fillStyle = '#38bdf8';
           ctx.globalAlpha = 0.35;
-          ctx.fillRect(x + 3, y + 21, 15, 32);
+          ctx.fillRect(x + 5, y + 60, 20, 104);
           ctx.globalAlpha = 1.0;
-          // Sunshade chajja
           ctx.fillStyle = '#b45309';
-          ctx.fillRect(x - 3, y + 14, 46, 5);
+          ctx.fillRect(x - 5, y + 44, 62, 11);
         }
       }
 
@@ -495,9 +491,9 @@
               uvs[idx * 2 + 1] = rv;
             } else {
               // Vertical facade wall UV in left half of atlas (u: 0.04..0.46)
-              const horiz = (Math.abs(norm.getX(idx)) > 0.5 ? z : x) * 0.006;
+              const horiz = (Math.abs(norm.getX(idx)) > 0.5 ? z : x) * 0.004;
               const wu = 0.05 + ((horiz % 0.40 + 0.40) % 0.40);
-              const wv = ((y - ROAD_Y_MM) * 0.018 * heightMult);
+              const wv = ((y - ROAD_Y_MM) * 0.009 * heightMult);
               uvs[idx * 2] = wu;
               uvs[idx * 2 + 1] = wv;
             }
@@ -543,7 +539,7 @@
         const adjY = yMm > ROAD_Y_MM ? ROAD_Y_MM + (yMm - ROAD_Y_MM) * heightMult : yMm;
         pos.setXYZ(i, (xMm - CENTER_X) * SCALE, adjY * SCALE, zMm * SCALE);
         if (yMm > 36.0 && Math.abs(norm.getY(i)) <= 0.58) {
-          uvs.setY(i, (yMm - ROAD_Y_MM) * 0.014 * heightMult);
+          uvs.setY(i, (yMm - ROAD_Y_MM) * 0.009 * heightMult);
         }
       }
       pos.needsUpdate = true;
@@ -564,9 +560,9 @@
       const mat6 = new THREE.MeshStandardMaterial({ map: ruler6Ft, roughness: 0.35 });
 
       // BoxGeometry faces: +X (East 8ft), -X (West 8ft), +Y (Top), -Y (Bottom), +Z (South 6ft), -Z (North 6ft)
-      const skirtGeo = new THREE.BoxGeometry(BOARD_W + 2.6, 5.2, BOARD_L + 2.6);
+      const skirtGeo = new THREE.BoxGeometry(BOARD_W + 4.4, 5.4, BOARD_L + 4.4);
       const skirtMesh = new THREE.Mesh(skirtGeo, [mat8, mat8, darkSlabMat, darkSlabMat, mat6, mat6]);
-      skirtMesh.position.set(0, -0.2, 0);
+      skirtMesh.position.set(0, 0.3, 0);
       detailGroup.add(skirtMesh);
 
       // Also place flat printed FT scale strips right on top of the East & North margins so they are legible even from top-down view!
